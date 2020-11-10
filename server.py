@@ -4,11 +4,16 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import time
 
-questions =["Who is the father of Ross' child ?","Sample Question 2","Sample question 3","Sample Question 4","Sample Question 5","Sample question 6","Sample Question 7","Sample Question 8","Sample Question 9","Sample Question 10"]
+
+sports = ["Ques 1 :Who is the captain of Indian cricket team?","A. Virat kohli","B. M.S. Dhoni","C. Suresh raina","D. Yuzvendra chahal","Ques 2 : Who is the captain of Football club Barcelona?","A. Lionel Messi","B. Cristiano Ronaldo","C. Marc-André ter Stegen","D. Jordi alba","Ques 3 : Who is the goalkeeper of Footbal club Barcelona?","A. Marc-André ter Stegen","B. Arnau Tenas Ureña","C. Neto","D. Iñaki Peña Sotorres","Ques 4 : Who is the wicket keeper of Indian cricket team ? ","A. Virat kohli","B. M.S. Dhoni","C. Suresh raina","D. Yuzvendra chahal","Ques 5 : Who won the IPL 2020?","A. Delhi Capitals","B. Mumbai Indians","C. Chennai Super kings","D. Royal challengers bangalore"]
+# questions =["Who is the father of Ross' child ?","Sample Question 2","Sample question 3","Sample Question 4","Sample Question 5","Sample question 6","Sample Question 7","Sample Question 8","Sample Question 9","Sample Question 10"]
+questions = []
+
 answers=['Ross','2','3','4','5','6','7','8','9','10']
 
-
 completion=0
+category=-1
+no_of_clients=0
 
 def completed(client) :
     global completion
@@ -73,6 +78,29 @@ def handle_client(client):  # Takes client socket as argument.
     """Handles a single client connection."""
     global score
     global completion
+    global category
+    global no_of_clients
+    no_of_clients+=1
+
+    if no_of_clients>2 :
+        wait()
+        sorry="**************Sorry! Two players are already playing QUIZUP******************"
+        client.send(bytes(sorry, "utf8"))
+        no_of_clients-=1
+        wait()
+        client.close()
+        return
+    
+    if no_of_clients < 2:
+        hold_on="Waiting for the other player to join...."
+        client.send(bytes(hold_on, "utf8"))
+
+    while True :
+        if no_of_clients>1 :
+            break
+    
+    wait()
+
     name = client.recv(BUFSIZ).decode("utf8")
     welcome = 'Welcome %s! If you ever want to quit, type {quit} to exit.' % name
     client.send(bytes(welcome, "utf8"))
@@ -81,10 +109,51 @@ def handle_client(client):  # Takes client socket as argument.
     final_scores[client] = 0
     clients[client] = name
     i=0
-    quesFirst=questions[i]
-    i+=1
+
     wait()
-    client.send(bytes(quesFirst,"utf8"))
+    
+    if category == -1 :
+        msg = 'Please choose a category out of the following: '
+        client.send(bytes(msg, "utf8"))
+        wait()
+        msg = 'A. TV Quiz        B. Sports        C. Object Oriented Programming'
+        client.send(bytes(msg, "utf8"))
+        wait()
+        msg = client.recv(BUFSIZ)
+        ans = msg.decode("utf8") + ""
+        if ans == 'A' or ans == 'a' :
+            category = 0
+        elif ans == 'B' or ans == 'b' :
+            category = 1
+        else :
+            category = 2
+
+    else :
+        wait()
+        if category == 0 :
+            cat = 'TV Quiz'
+        elif category == 1 :
+            cat = 'Sports'
+        else :
+            cat = 'Object Oriented Programming'
+        msg = 'Your opponent chose the category: ' + cat
+        client.send(bytes(msg, "utf8"))
+
+
+
+    questions = sports
+
+    j=0
+    wait()
+
+    while j<5 :
+        ques=questions[(5*i) + j]
+        client.send(bytes(ques, "utf8"))
+        wait()
+        j+=1
+
+    i+=1
+    
 
     while True:
         msg = client.recv(BUFSIZ)
@@ -93,23 +162,38 @@ def handle_client(client):  # Takes client socket as argument.
             final_scores[client]+=10
         if msg != bytes("{quit}", "utf8"):
             # broadcast(msg, name+": ")
-            ques=questions[i]
+            
             client.send(bytes(name+":","utf8")+msg)
             wait()
             
-            # client.send(bytes(ques, "utf8"))
-            client.send(bytes(ques, "utf8"))
+
+            j=0
+            client.send(bytes("************************************************************************", "utf8"))
+            wait()
+            while j<5 :
+                ques=questions[(5*i) + j]
+                client.send(bytes(ques, "utf8"))
+                wait()
+                j+=1
+
+            
             i+=1
             if i==5 :
                 wait()
                 client.send(bytes(name+":","utf8")+msg)
                 completed(client)
+                client.send(bytes("{quit}", "utf8"))
+                client.close()
+                del clients[client]
+                broadcast(bytes("%s has left the game." % name, "utf8"))
+                no_of_clients-=1
                 break
         else:
             client.send(bytes("{quit}", "utf8"))
             client.close()
             del clients[client]
             broadcast(bytes("%s has left the chat." % name, "utf8"))
+            no_of_clients-=1
             break
 
 
