@@ -59,10 +59,7 @@ top.protocol("WM_DELETE_WINDOW", on_closing)
 #----Now comes the sockets part----
 HOST = "127.0.0.1"
 PORT = 33000
-if not PORT:
-    PORT = 33000
-else:
-    PORT = int(PORT)
+
 
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
