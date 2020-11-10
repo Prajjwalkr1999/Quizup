@@ -12,9 +12,12 @@ def receive():
     """Handles receiving of messages."""
     while True:
         try:
-            msg = "\n" + client_socket.recv(BUFSIZ).decode("utf8")
-            msg+="\n"
+            
+            msg = client_socket.recv(BUFSIZ).decode("utf8")
+            print(msg + '\n')
             msg_list.insert(tkinter.END, msg)
+            
+
         except OSError:  # Possibly client has left the chat.
             break
 
@@ -35,33 +38,38 @@ def on_closing(event=None):
     send()
 
 top = tkinter.Tk()
-top.title("Chatter")
-
-messages_frame = tkinter.Frame(top)
+top.title("QUIZUP")
+# top.configure(bg='blue')
+messages_frame = tkinter.Frame(top,bg='green')
+# messages_frame.config(bg='green')
 my_msg = tkinter.StringVar()  # For the messages to be sent.
-my_msg.set("Type your messages here.")
+my_msg.set("")
 scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages.
 # Following will contain the messages.
-msg_list = tkinter.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
+msg_list = tkinter.Listbox(messages_frame, height=35, width=95, yscrollcommand=scrollbar.set, bg='#ccffef')
 scrollbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
 msg_list.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
 msg_list.pack()
 messages_frame.pack()
 
 entry_field = tkinter.Entry(top, textvariable=my_msg)
+# entry_field.insert(0,'Enter your answer')
 entry_field.bind("<Return>", send)
 entry_field.pack()
-send_button = tkinter.Button(top, text="Send", command=send)
+send_button = tkinter.Button(top, text="Send", command=send , bg='#ccffef')
 send_button.pack()
 
 top.protocol("WM_DELETE_WINDOW", on_closing)
 
 #----Now comes the sockets part----
 HOST = "127.0.0.1"
-PORT = 33000
+PORT = 33001
+if not PORT:
+    PORT = 33001
+else:
+    PORT = int(PORT)
 
-
-BUFSIZ = 1024
+BUFSIZ = 2048
 ADDR = (HOST, PORT)
 
 client_socket = socket(AF_INET, SOCK_STREAM)
