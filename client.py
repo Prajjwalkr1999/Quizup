@@ -12,9 +12,12 @@ def receive():
     """Handles receiving of messages."""
     while True:
         try:
-            msg = "\n" + client_socket.recv(BUFSIZ).decode("utf8")
-            msg+="\n"
+            
+            msg = client_socket.recv(BUFSIZ).decode("utf8")
+            print(msg + '\n')
             msg_list.insert(tkinter.END, msg)
+            
+
         except OSError:  # Possibly client has left the chat.
             break
 
@@ -35,14 +38,14 @@ def on_closing(event=None):
     send()
 
 top = tkinter.Tk()
-top.title("Chatter")
+top.title("QUIZUP")
 
 messages_frame = tkinter.Frame(top)
 my_msg = tkinter.StringVar()  # For the messages to be sent.
 my_msg.set("Type your messages here.")
 scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages.
 # Following will contain the messages.
-msg_list = tkinter.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
+msg_list = tkinter.Listbox(messages_frame, height=23, width=75, yscrollcommand=scrollbar.set)
 scrollbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
 msg_list.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
 msg_list.pack()
@@ -58,13 +61,13 @@ top.protocol("WM_DELETE_WINDOW", on_closing)
 
 #----Now comes the sockets part----
 HOST = "127.0.0.1"
-PORT = 33000
+PORT = 33001
 if not PORT:
-    PORT = 33000
+    PORT = 33001
 else:
     PORT = int(PORT)
 
-BUFSIZ = 1024
+BUFSIZ = 2048
 ADDR = (HOST, PORT)
 
 client_socket = socket(AF_INET, SOCK_STREAM)
