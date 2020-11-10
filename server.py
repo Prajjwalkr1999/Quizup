@@ -4,12 +4,15 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import time
 
+questions =[]
+answers=[]
 
 sports = ["Ques 1 :Who is the captain of Indian cricket team?","A. Virat kohli","B. M.S. Dhoni","C. Suresh raina","D. Yuzvendra chahal","Ques 2 : Who is the captain of Football club Barcelona?","A. Lionel Messi","B. Cristiano Ronaldo","C. Marc-André ter Stegen","D. Jordi alba","Ques 3 : Who is the goalkeeper of Footbal club Barcelona?","A. Marc-André ter Stegen","B. Arnau Tenas Ureña","C. Neto","D. Iñaki Peña Sotorres","Ques 4 : Who is the wicket keeper of Indian cricket team ? ","A. Virat kohli","B. M.S. Dhoni","C. Suresh raina","D. Yuzvendra chahal","Ques 5 : Who won the IPL 2020?","A. Delhi Capitals","B. Mumbai Indians","C. Chennai Super kings","D. Royal challengers bangalore"]
-# questions =["Who is the father of Ross' child ?","Sample Question 2","Sample question 3","Sample Question 4","Sample Question 5","Sample question 6","Sample Question 7","Sample Question 8","Sample Question 9","Sample Question 10"]
-questions = []
-
-answers=['Ross','2','3','4','5','6','7','8','9','10']
+ans1=['A','A','A','B','B']
+tv = ["Ques 1 :What does Joey never share?","A. His books","B. His information","C. His food","D. His DVDs","Ques 2 : How many claps are there in F.R.I.E.N.D.S.’ theme song? ","A. 3","B. 4","C. 5","D. 6","Ques 3 : What’s the name of Joey’s penguin?","A. Snowflake","B. Waddle","C. Huggsy","D. Bobber","Ques 4 : How many times has ross been divorced ? ","A. 0","B. 1","C. 2","D. 3","Ques 5 : What song is Phoebe best known for?","A. Smelly Cat","B. Smelly Dog","C. Smelly Pig","D. Smelly Chandler"]
+ans2=['C','B','C','D','A']
+oops = ["Ques 1 : Which of the following concepts means determining at runtime what method to invoke?","A. Data hiding","B. Dynamic binding","C. Dynamic typing","D. Dynamic loading","Ques 2 : Which of the following is not the member of class?","A. Static function","B. Friend function","C. Const function","D. Virtual function","Ques 3 : Which of the following is not a type of constructor?","A. Copy constructor","B. Default constructor","C. Friend constructor","D. Parameterized constructor","Ques 4 : Which of the following type of class allows only one object of it to be created?","A. Virtual class","B. Abstract class","C. Singleton class","D. Friend class","Ques 5 : Which of the following are not visible in the class inheritance?","A. Public data members","B. Private data members","C. Protected data members","D. Member functions"]
+ans3=['B','B','C','B','B']
 
 completion=0
 category=-1
@@ -123,29 +126,40 @@ def handle_client(client):  # Takes client socket as argument.
         ans = msg.decode("utf8") + ""
         if ans == 'A' or ans == 'a' :
             category = 0
+            questions = tv
+            answers = ans2
         elif ans == 'B' or ans == 'b' :
             category = 1
+            questions = sports
+            answers = ans1
         else :
             category = 2
+            questions = oops
+            answers = ans3
 
     else :
         wait()
         if category == 0 :
             cat = 'TV Quiz'
+            questions = tv
+            answers = ans2
         elif category == 1 :
             cat = 'Sports'
+            questions = sports
+            answers = ans1
         else :
             cat = 'Object Oriented Programming'
+            questions = oops
+            answers = ans3
         msg = 'Your opponent chose the category: ' + cat
         client.send(bytes(msg, "utf8"))
 
 
 
-    questions = sports
-
     j=0
     wait()
-
+    client.send(bytes("************************************************************************", "utf8"))
+    wait()
     while j<5 :
         ques=questions[(5*i) + j]
         client.send(bytes(ques, "utf8"))
@@ -181,6 +195,8 @@ def handle_client(client):  # Takes client socket as argument.
             if i==5 :
                 wait()
                 client.send(bytes(name+":","utf8")+msg)
+                wait()
+                client.send(bytes("************************************************************************", "utf8"))
                 completed(client)
                 client.send(bytes("{quit}", "utf8"))
                 client.close()
