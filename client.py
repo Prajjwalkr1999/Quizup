@@ -5,9 +5,6 @@ from threading import Thread
 import tkinter
 
 
-questions =["Sample Question 1","Sample Question 2","Sample question 3","Sample Question 4","Sample Question 5","Sample question 6","Sample Question 7","Sample Question 8","Sample Question 9","Sample Question 10"]
-answers=['1','2','3','4','5','6','7','8','9','10']
-
 def receive():
     """Handles receiving of messages."""
     while True:
@@ -22,7 +19,7 @@ def receive():
             break
 
 
-def send(event=None):  # event is passed by binders.
+def send(event=None):  
     """Handles sending of messages."""
     msg = my_msg.get()
     my_msg.set("")  # Clears input field.
@@ -42,18 +39,17 @@ top.title("QUIZUP")
 # top.configure(bg='blue')
 messages_frame = tkinter.Frame(top,bg='green')
 # messages_frame.config(bg='green')
-my_msg = tkinter.StringVar()  # For the messages to be sent.
+my_msg = tkinter.StringVar()  # For the answer to be sent.
 my_msg.set("")
-scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages.
+scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past questions and answers.
 # Following will contain the messages.
-msg_list = tkinter.Listbox(messages_frame, height=30, width=80, yscrollcommand=scrollbar.set, bg='#ccffef')
+msg_list = tkinter.Listbox(messages_frame, height=40, width=100, yscrollcommand=scrollbar.set, bg='#ccffef')
 scrollbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
 msg_list.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
 msg_list.pack()
 messages_frame.pack()
 
 entry_field = tkinter.Entry(top, textvariable=my_msg)
-# entry_field.insert(0,'Enter your answer')
 entry_field.bind("<Return>", send)
 entry_field.pack()
 send_button = tkinter.Button(top, text="Send", command=send , bg='#ccffef')

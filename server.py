@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Server for multithreaded (asynchronous) chat application."""
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import time
@@ -25,7 +24,7 @@ def completed(client) :
     score = final_scores[client]
     wait()
     while True :
-        if completion==2 :
+         if completion==2 :
             break
     score1 = -1
     score2 = -1
@@ -193,17 +192,18 @@ def handle_client(client):  # Takes client socket as argument.
             
             i+=1
             if i==5 :
+                msg = client.recv(BUFSIZ)
                 wait()
-                client.send(bytes(name+":","utf8")+msg)
+                client.send(bytes(name+" : ","utf8")+msg)
                 wait()
                 client.send(bytes("************************************************************************", "utf8"))
                 completed(client)
-                client.send(bytes("{quit}", "utf8"))
-                client.close()
-                del clients[client]
-                broadcast(bytes("%s has left the game." % name, "utf8"))
-                no_of_clients-=1
-                break
+                # client.send(bytes("{quit}", "utf8"))
+                # client.close()
+                # del clients[client]
+                # broadcast(bytes("%s has left the game." % name, "utf8"))
+                # no_of_clients-=1
+                # break
         else:
             client.send(bytes("{quit}", "utf8"))
             client.close()
@@ -214,8 +214,6 @@ def handle_client(client):  # Takes client socket as argument.
 
 
 def broadcast(msg, prefix=""):  # prefix is for name identification.
-    """Broadcasts a message to all the clients."""
-
     for sock in clients:
         sock.send(bytes(prefix, "utf8")+msg)
 
