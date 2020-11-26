@@ -84,18 +84,18 @@ def handle_client(client):  # Takes client socket as argument.
     global no_of_clients
     no_of_clients+=1
 
-    if no_of_clients>2 :
-        wait()
-        sorry="**************Sorry! Two players are already playing QUIZUP******************"
-        client.send(bytes(sorry, "utf8"))
-        no_of_clients-=1
-        wait()
-        client.close()
-        return
+    # if no_of_clients>2 :
+    #     wait()
+    #     sorry="**************Sorry! Two players are already playing QUIZUP******************"
+    #     client.send(bytes(sorry, "utf8"))
+    #     no_of_clients-=1
+    #     wait()
+    #     client.close()
+    #     return
     
-    if no_of_clients < 2:
-        hold_on="Waiting for the other player to join...."
-        client.send(bytes(hold_on, "utf8"))
+    # if no_of_clients%2!=0:
+    #     hold_on="Waiting for the other player to join...."
+    #     client.send(bytes(hold_on, "utf8"))
 
     while True :
         if no_of_clients>1 :
