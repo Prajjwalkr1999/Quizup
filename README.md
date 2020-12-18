@@ -1,4 +1,4 @@
-# Dressify
+# QuizUp
 Quizup is a python-based GUI application that is a multiplayer online Quizzing app. It has multiple choice questions based on various categories and the users can play against each other in real time.
 
 ## Technologies Used
