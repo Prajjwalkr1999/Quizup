@@ -9,6 +9,10 @@ Quizup is a python-based GUI application that is a multiplayer online Quizzing a
 ## Data Flow 
 ![alt text](https://github.com/Prajjwalkr1999/Quizup/blob/master/images/data%20flow.png?raw=true)
 
+## The App
+![alt text](https://github.com/Prajjwalkr1999/Quizup/blob/master/images/app1.jpg?raw=true)
+![alt text](https://github.com/Prajjwalkr1999/Quizup/blob/master/images/app2.jpg?raw=true)
+![alt text](https://github.com/Prajjwalkr1999/Quizup/blob/master/images/app3.jpg?raw=true)
 
 ##  How to run the application:
 1. Open Terminal
